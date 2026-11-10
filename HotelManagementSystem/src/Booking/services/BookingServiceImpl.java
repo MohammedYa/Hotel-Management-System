@@ -22,7 +22,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public boolean addBooking(Booking booking) {
-        return
+        return false;
     }
 
     @Override
