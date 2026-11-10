@@ -1,60 +1,70 @@
+
 package Rooms.pakages;
 
 import Rooms.Enums.RoomStatus;
 import Rooms.Enums.RoomTybe;
 import Rooms.entite.Room;
-import Rooms.service.RoomServiceImpl;
+import Rooms.service.RoomService;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class ManagementRooms {
-RoomMenu  roomMenu = new RoomMenu();
-RoomServiceImpl  roomService = new RoomServiceImpl();
-Scanner scanner = new Scanner(System.in);
 
-    public void start(){
+    private final RoomMenu roomMenu = new RoomMenu();
+    private final RoomService roomService;
+    private final Scanner scanner = new Scanner(System.in);
 
-        int countOfChoice=0;
-        boolean flag=true;
-        while (flag){
+    public ManagementRooms(RoomService roomService) {
+        this.roomService = roomService;
+    }
+
+    public void start() {
+
+        int countOfChoice = 0;
+        boolean flag = true;
+
+        while (flag) {
             try {
                 roomMenu.displayMenu();
-                System.out.print("Enter your choice:     ");
-                int choice =scanner.nextInt();
+                System.out.print("Enter your choice: ");
+                int choice = scanner.nextInt();
 
                 switch (choice) {
                     case 0:
-                        countOfChoice=0;
+                        countOfChoice = 0;
                         System.out.println("Back to Main Menu............ \n");
-                        flag=false;
+                        flag = false;
                         break;
 
                     case 1:
-                        countOfChoice=0;
+                        countOfChoice = 0;
                         addRoom();
                         break;
-                    case 2:
-                        countOfChoice=0;
-                        updateRoom();
 
+                    case 2:
+                        countOfChoice = 0;
+                        updateRoom();
                         break;
+
                     case 3:
-                        countOfChoice=0;
+                        countOfChoice = 0;
                         searchRoom();
                         break;
+
                     case 4:
-                        countOfChoice=0;
-                        roomService.displayAllRooms();
+                        countOfChoice = 0;
+                        displayAllRooms();
                         break;
+
                     case 5:
-                        countOfChoice=0;
+                        countOfChoice = 0;
                         changeRoomStatus();
                         break;
-                    case 6:
-                        countOfChoice=0;
-                        deleteRoom();
 
+                    case 6:
+                        countOfChoice = 0;
+                        deleteRoom();
                         break;
 
                     default:
@@ -67,12 +77,10 @@ Scanner scanner = new Scanner(System.in);
                             System.out.println("Invalid choice. Enter a number between 0 and 6.");
                             System.out.println("You have " + (3 - countOfChoice) + " chances left.");
                         }
-
                 }
-            }
-            catch (InputMismatchException e) {
-                scanner.nextLine(); // Remove invalid input
 
+            } catch (InputMismatchException e) {
+                scanner.nextLine();
                 countOfChoice++;
 
                 if (countOfChoice >= 3) {
@@ -84,27 +92,19 @@ Scanner scanner = new Scanner(System.in);
                 }
             }
         }
-
-
-
     }
 
-
-
-
-
     private void addRoom() {
-        System.out.print("\nAdd Room Page\n");
+
+        System.out.println("\nAdd Room Page\n");
 
         System.out.print("Enter the Room Number: ");
         int roomNumber = scanner.nextInt();
 
         int countOfChoice = 0;
         boolean flag = true;
-
         RoomTybe roomTybe = null;
 
-        // Select Room Type
         while (flag) {
             try {
                 System.out.print(
@@ -118,17 +118,14 @@ Scanner scanner = new Scanner(System.in);
                         roomTybe = RoomTybe.SINGLE;
                         flag = false;
                         break;
-
                     case 2:
                         roomTybe = RoomTybe.DOUBLE;
                         flag = false;
                         break;
-
                     case 3:
                         roomTybe = RoomTybe.SUITE;
                         flag = false;
                         break;
-
                     default:
                         countOfChoice++;
 
@@ -155,10 +152,8 @@ Scanner scanner = new Scanner(System.in);
             }
         }
 
-        // Select Room Status
         countOfChoice = 0;
         flag = true;
-
         RoomStatus roomStatus = null;
 
         while (flag) {
@@ -174,22 +169,18 @@ Scanner scanner = new Scanner(System.in);
                         roomStatus = RoomStatus.AVAILABLE;
                         flag = false;
                         break;
-
                     case 2:
                         roomStatus = RoomStatus.OCCUPIED;
                         flag = false;
                         break;
-
                     case 3:
                         roomStatus = RoomStatus.MAINTENANCE;
                         flag = false;
                         break;
-
                     case 4:
                         roomStatus = RoomStatus.CLEANING;
                         flag = false;
                         break;
-
                     default:
                         countOfChoice++;
 
@@ -229,12 +220,28 @@ Scanner scanner = new Scanner(System.in);
                 roomPrice,
                 roomCapacity
         );
-        roomService.addRoom(room);
-        System.out.print("\nRoom Created Successfully!\n");
+
+        if (roomService.addRoom(room)) {
+            System.out.println("\nRoom Created Successfully!\n");
+        } else {
+            System.out.println("Room Number Already Exists!");
+        }
     }
 
+    private void displayAllRooms() {
+
+        System.out.println("\nDisplay All Rooms Page\n");
+
+        if (roomService.getAllRooms().isEmpty()) {
+            System.out.println("No Rooms Found");
+            return;
+        }
+
+        roomService.getAllRooms().forEach(System.out::println);
+    }
 
     private void searchRoom() {
+
         System.out.println("\nSearch Room Page\n");
 
         System.out.print("Enter Room Number: ");
@@ -248,16 +255,21 @@ Scanner scanner = new Scanner(System.in);
             System.out.println("Room Not Found!");
         }
     }
-    private  void deleteRoom() {
+
+    private void deleteRoom() {
+
         System.out.println("\nDelete Room Page\n");
 
         System.out.print("Enter Room Number: ");
         int roomNumber = scanner.nextInt();
 
-        roomService.deleteRoom(roomNumber);
-
-
+        if (roomService.deleteRoom(roomNumber)) {
+            System.out.println("Room Deleted Successfully");
+        } else {
+            System.out.println("Room Not Found");
+        }
     }
+
     private void updateRoom() {
 
         System.out.println("\nUpdate Room Page");
@@ -274,10 +286,8 @@ Scanner scanner = new Scanner(System.in);
 
         int countOfChoice = 0;
         boolean flag = true;
-
         RoomTybe roomTybe = null;
 
-        // Select Room Type
         while (flag) {
             try {
                 System.out.print(
@@ -291,17 +301,14 @@ Scanner scanner = new Scanner(System.in);
                         roomTybe = RoomTybe.SINGLE;
                         flag = false;
                         break;
-
                     case 2:
                         roomTybe = RoomTybe.DOUBLE;
                         flag = false;
                         break;
-
                     case 3:
                         roomTybe = RoomTybe.SUITE;
                         flag = false;
                         break;
-
                     default:
                         countOfChoice++;
 
@@ -328,10 +335,8 @@ Scanner scanner = new Scanner(System.in);
             }
         }
 
-        // Select Room Status
         countOfChoice = 0;
         flag = true;
-
         RoomStatus roomStatus = null;
 
         while (flag) {
@@ -347,22 +352,18 @@ Scanner scanner = new Scanner(System.in);
                         roomStatus = RoomStatus.AVAILABLE;
                         flag = false;
                         break;
-
                     case 2:
                         roomStatus = RoomStatus.OCCUPIED;
                         flag = false;
                         break;
-
                     case 3:
                         roomStatus = RoomStatus.MAINTENANCE;
                         flag = false;
                         break;
-
                     case 4:
                         roomStatus = RoomStatus.CLEANING;
                         flag = false;
                         break;
-
                     default:
                         countOfChoice++;
 
@@ -403,8 +404,13 @@ Scanner scanner = new Scanner(System.in);
                 roomCapacity
         );
 
-        roomService.updateRoom(updatedRoom);
+        if (roomService.updateRoom(updatedRoom)) {
+            System.out.println("Room Updated Successfully");
+        } else {
+            System.out.println("Room Not Found");
+        }
     }
+
     private void changeRoomStatus() {
 
         System.out.println("\nChange Room Status Page");
@@ -421,7 +427,6 @@ Scanner scanner = new Scanner(System.in);
 
         int countOfChoice = 0;
         boolean flag = true;
-
         RoomStatus roomStatus = null;
 
         while (flag) {
@@ -437,22 +442,18 @@ Scanner scanner = new Scanner(System.in);
                         roomStatus = RoomStatus.AVAILABLE;
                         flag = false;
                         break;
-
                     case 2:
                         roomStatus = RoomStatus.OCCUPIED;
                         flag = false;
                         break;
-
                     case 3:
                         roomStatus = RoomStatus.MAINTENANCE;
                         flag = false;
                         break;
-
                     case 4:
                         roomStatus = RoomStatus.CLEANING;
                         flag = false;
                         break;
-
                     default:
                         countOfChoice++;
 
@@ -479,8 +480,10 @@ Scanner scanner = new Scanner(System.in);
             }
         }
 
-        roomService.changeRoomStatus(roomNumber, roomStatus);
+        if (roomService.changeRoomStatus(roomNumber, roomStatus)) {
+            System.out.println("Room Status Updated Successfully");
+        } else {
+            System.out.println("Room Not Found");
+        }
     }
-
-
 }

@@ -1,82 +1,47 @@
+
 package Rooms.service;
 
 import Rooms.Enums.RoomStatus;
 import Rooms.entite.Room;
+import Rooms.pakages.RoomRepository;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class RoomServiceImpl implements RoomService {
-    private ArrayList<Room> rooms = new ArrayList<>();
 
-    @Override
-    public void addRoom(Room room) {
+    private final RoomRepository roomRepository;
 
-        rooms.add(room);
+    public RoomServiceImpl(RoomRepository roomRepository) {
+        this.roomRepository = roomRepository;
     }
 
     @Override
-    public void displayAllRooms() {
-        System.out.print("\nDisplay All Rooms Page\n");
+    public boolean addRoom(Room room) {
+        return roomRepository.addRoom(room);
+    }
 
-        if (rooms.size()>0){
-            rooms.forEach(room -> System.out.print(room));
-        }
-        else{
-            System.out.println("No Rooms Found");
-        }
-
-
+    @Override
+    public List<Room> getAllRooms() {
+        return roomRepository.getAllRooms();
     }
 
     @Override
     public Room searchRoom(int roomNumber) {
-        return rooms.stream()
-                .filter(r -> r.getRoomNumber() == roomNumber)
-                .findFirst()
-                .orElse(null);
+        return roomRepository.searchRoom(roomNumber);
     }
 
     @Override
-    public void deleteRoom(int roomNumber) {
-
-        boolean ExistRoom =rooms.removeIf(r->r.getRoomNumber()==roomNumber);
-        if(ExistRoom){
-            System.out.println("Room Deleted Successfully");
-        }
-        else {
-            System.out.println("Room Not Found");
-        }
+    public boolean deleteRoom(int roomNumber) {
+        return roomRepository.deleteRoom(roomNumber);
     }
 
     @Override
-    public void updateRoom(Room room) {
-        Room existingRoom = searchRoom(room.getRoomNumber());
-
-        if (existingRoom != null) {
-            // Update room properties here
-
-            existingRoom.setRoomTybe(room.getRoomTybe());
-            existingRoom.setRoomStatus(room.getRoomStatus());
-            existingRoom.setRoomPrice(room.getRoomPrice());
-            existingRoom.setRoomCapacity(room.getRoomCapacity());
-            System.out.println("Room Updated Successfully");
-        } else {
-            System.out.println("Room Not Found");
-        }
+    public boolean updateRoom(Room room) {
+        return roomRepository.updateRoom(room);
     }
 
     @Override
-    public void changeRoomStatus(int roomNumber, RoomStatus roomStatus) {
-        Room existingRoom = searchRoom(roomNumber);
-         if(existingRoom!=null){
-             existingRoom.setRoomStatus(roomStatus);
-             System.out.println("Room Status Updated Successfully");
-
-         }
-         else {
-            System.out.println("Room Not Found");
-         }
-
+    public boolean changeRoomStatus(int roomNumber, RoomStatus roomStatus) {
+        return roomRepository.changeRoomStatus(roomNumber, roomStatus);
     }
-
 }

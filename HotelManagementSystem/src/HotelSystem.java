@@ -1,11 +1,30 @@
+import Customers.Packages.CustomerRepository;
+import Customers.Packages.ManagementCustomers;
+import Customers.Services.CustomerService;
+import Customers.Services.CustomerServiceImpl;
 import Rooms.pakages.ManagementRooms;
+import Rooms.pakages.RoomRepository;
+import Rooms.service.RoomService;
+import Rooms.service.RoomServiceImpl;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class HotelSystem {
-ManagementRooms  managementRooms  = new ManagementRooms();
+
+RoomRepository roomRepository = new RoomRepository();
+RoomService roomService = new RoomServiceImpl(roomRepository);
+ManagementRooms managementRooms = new ManagementRooms(roomService);
+
+
+
 Scanner scanner =new Scanner(System.in);
+
+CustomerRepository customerRepository = new CustomerRepository();
+CustomerService customerService = new CustomerServiceImpl(customerRepository);
+ManagementCustomers managementCustomers = new ManagementCustomers(customerService);
+
+
     public void Start(){
         int countOfChoice=0;
         boolean flag=true;
@@ -35,7 +54,8 @@ Scanner scanner =new Scanner(System.in);
                         break;
                     case 2:
                         countOfChoice=0;
-                        System.out.print("\n========== Customer Management ==========\n");
+                        managementCustomers.Start();
+
                         break;
                     case 3:
                         countOfChoice=0;
