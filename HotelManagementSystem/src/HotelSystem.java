@@ -1,3 +1,7 @@
+import Booking.Packages.BookingRepository;
+import Booking.Packages.ManagementBooking;
+import Booking.services.BookingService;
+import Booking.services.BookingServiceImpl;
 import Customers.Packages.CustomerRepository;
 import Customers.Packages.ManagementCustomers;
 import Customers.Services.CustomerService;
@@ -12,17 +16,28 @@ import java.util.Scanner;
 
 public class HotelSystem {
 
-RoomRepository roomRepository = new RoomRepository();
-RoomService roomService = new RoomServiceImpl(roomRepository);
-ManagementRooms managementRooms = new ManagementRooms(roomService);
+    Scanner scanner =new Scanner(System.in);
 
+    // 1. Repositories
+    RoomRepository roomRepository = new RoomRepository();
+    CustomerRepository customerRepository = new CustomerRepository();
+    BookingRepository bookingRepository = new BookingRepository();
 
+    // 2. Booking Service
+    BookingService bookingService = new BookingServiceImpl(
+            bookingRepository,
+            customerRepository,
+            roomRepository
+    );
 
-Scanner scanner =new Scanner(System.in);
+    // 3. Other Services
+    RoomService roomService = new RoomServiceImpl(roomRepository,bookingService);
+    CustomerService customerService =new CustomerServiceImpl(customerRepository, bookingService);
 
-CustomerRepository customerRepository = new CustomerRepository();
-CustomerService customerService = new CustomerServiceImpl(customerRepository);
-ManagementCustomers managementCustomers = new ManagementCustomers(customerService);
+    // 4. Management
+    ManagementRooms managementRooms = new ManagementRooms(roomService);
+    ManagementCustomers managementCustomers = new ManagementCustomers(customerService);
+    ManagementBooking managementBooking = new ManagementBooking(bookingService);
 
 
     public void Start(){
@@ -59,7 +74,7 @@ ManagementCustomers managementCustomers = new ManagementCustomers(customerServic
                         break;
                     case 3:
                         countOfChoice=0;
-                        System.out.print("\n========== Booking Management ==========\n");
+                        managementBooking.Start();
                         break;
                     case 4:
                         countOfChoice=0;

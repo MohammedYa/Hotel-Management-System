@@ -3,5 +3,7 @@ package Booking.Enums;
 public enum BookingStatus {
     CONFIRMED,
     CANCELLED,
-    COMPLETED
+    COMPLETED,
+    NO_SHOW
+
 }
