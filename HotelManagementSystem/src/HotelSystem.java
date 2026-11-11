@@ -2,6 +2,9 @@ import Booking.Packages.BookingRepository;
 import Booking.Packages.ManagementBooking;
 import Booking.services.BookingService;
 import Booking.services.BookingServiceImpl;
+import CheckInOut.Packages.ManagementCheckInOut;
+import CheckInOut.Services.CheckInOutService;
+import CheckInOut.Services.CheckInOutServiceImpl;
 import Customers.Packages.CustomerRepository;
 import Customers.Packages.ManagementCustomers;
 import Customers.Services.CustomerService;
@@ -30,15 +33,17 @@ public class HotelSystem {
             roomRepository
     );
 
+
     // 3. Other Services
     RoomService roomService = new RoomServiceImpl(roomRepository,bookingService);
     CustomerService customerService =new CustomerServiceImpl(customerRepository, bookingService);
+    CheckInOutService checkInOutService = new CheckInOutServiceImpl(bookingRepository, roomRepository);
 
     // 4. Management
     ManagementRooms managementRooms = new ManagementRooms(roomService);
     ManagementCustomers managementCustomers = new ManagementCustomers(customerService);
     ManagementBooking managementBooking = new ManagementBooking(bookingService);
-
+    ManagementCheckInOut managementCheckInOut = new ManagementCheckInOut(checkInOutService);
 
     public void Start(){
         int countOfChoice=0;
@@ -78,7 +83,7 @@ public class HotelSystem {
                         break;
                     case 4:
                         countOfChoice=0;
-                        System.out.print("\n========== Check-in / Check-out ==========\n");
+                        managementCheckInOut.Start();
                         break;
                     case 5:
                         countOfChoice=0;
