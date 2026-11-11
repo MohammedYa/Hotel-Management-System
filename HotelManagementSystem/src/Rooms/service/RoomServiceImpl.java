@@ -1,6 +1,7 @@
 
 package Rooms.service;
 
+import Booking.services.BookingService;
 import Rooms.Enums.RoomStatus;
 import Rooms.entite.Room;
 import Rooms.pakages.RoomRepository;
@@ -8,11 +9,12 @@ import Rooms.pakages.RoomRepository;
 import java.util.List;
 
 public class RoomServiceImpl implements RoomService {
-
+    private final BookingService bookingService;
     private final RoomRepository roomRepository;
 
-    public RoomServiceImpl(RoomRepository roomRepository) {
+    public RoomServiceImpl(RoomRepository roomRepository, BookingService bookingService) {
         this.roomRepository = roomRepository;
+        this.bookingService = bookingService;
     }
 
     @Override
@@ -32,6 +34,11 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public boolean deleteRoom(int roomNumber) {
+        if(roomRepository.searchRoom(roomNumber)==null){
+            return false;
+
+        }
+        bookingService.cancelBookingsByRoomNumber(roomNumber);
         return roomRepository.deleteRoom(roomNumber);
     }
 

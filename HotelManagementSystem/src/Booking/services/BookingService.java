@@ -11,4 +11,7 @@ public interface BookingService {
     public boolean cancelBooking(int bookingId);
     public boolean updateBooking(int bookingId, Booking updatedBooking);
     public List<Booking> getBookings() ;
-}
+    boolean cancelBookingsByCustomerId(int customerId);
+    public boolean cancelBookingsByRoomNumber(int roomNumber) ;
+
+    }

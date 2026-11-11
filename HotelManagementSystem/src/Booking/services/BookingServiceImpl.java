@@ -147,4 +147,27 @@ public class BookingServiceImpl implements BookingService {
     public List<Booking> getBookings() {
         return bookingRepository.getBookings();
     }
+
+    @Override
+    public boolean cancelBookingsByCustomerId(int customerId) {
+        List<Booking> bookingsCustomerById = bookingRepository.getBookings().stream()
+                .filter(booking -> booking.getCustomerId() == customerId && booking.getBookingStatus() == BookingStatus.CONFIRMED)
+                .toList();
+        if (bookingsCustomerById.isEmpty()) {
+            return false;
+        }
+        bookingsCustomerById.forEach(booking -> booking.setBookingStatus(BookingStatus.CANCELLED));
+        return true;
+    }
+    @Override
+    public boolean cancelBookingsByRoomNumber(int roomNumber) {
+        List<Booking> bookingsRoomNumber = bookingRepository.getBookings().stream()
+                .filter(booking -> booking.getRoomNumber() == roomNumber && booking.getBookingStatus() == BookingStatus.CONFIRMED)
+                .toList();
+        if (bookingsRoomNumber.isEmpty()) {
+            return false;
+        }
+        bookingsRoomNumber.forEach(booking -> booking.setBookingStatus(BookingStatus.CANCELLED));
+        return true;
+    }
 }

@@ -1,5 +1,6 @@
 package Customers.Services;
 
+import Booking.services.BookingService;
 import Customers.Entite.Customer;
 import Customers.Packages.CustomerRepository;
 
@@ -7,9 +8,10 @@ import java.util.List;
 
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
-
-    public CustomerServiceImpl(CustomerRepository customerRepository) {
+    private final BookingService bookingService;
+    public CustomerServiceImpl(CustomerRepository customerRepository, BookingService bookingService) {
         this.customerRepository = customerRepository;
+        this.bookingService = bookingService;
     }
 
     @Override
@@ -27,10 +29,17 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public boolean deleteCustomer(int customerId) {
+        Customer customer = customerRepository.searchCustomer(customerId);
+
+        if (customer == null) {
+            return false;
+        }
+
+        bookingService.cancelBookingsByCustomerId(customerId);
 
         return customerRepository.deleteCustomer(customerId);
-
     }
+
     @Override
     public Customer findCustomerById(int id) {
         return customerRepository.searchCustomer(id);
