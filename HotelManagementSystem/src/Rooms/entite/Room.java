@@ -3,13 +3,15 @@ package Rooms.entite;
 import Rooms.Enums.RoomStatus;
 import Rooms.Enums.RoomTybe;
 
+import java.math.BigDecimal;
+
 public class Room {
     private int roomNumber;
     private RoomTybe roomTybe;
     private RoomStatus roomStatus;
-    private double roomPrice;
+    private BigDecimal roomPrice;
     private int roomCapacity;
-   public Room(int roomNumber,RoomTybe roomTybe,RoomStatus roomStatus,double roomPrice,int roomCapacity) {
+   public Room(int roomNumber,RoomTybe roomTybe,RoomStatus roomStatus,BigDecimal roomPrice,int roomCapacity) {
 
        setRoomNumber(roomNumber);
        setRoomTybe(roomTybe);
@@ -40,10 +42,10 @@ public class Room {
        return roomStatus;
     }
 
-    public void setRoomPrice(double roomPrice) {
+    public void setRoomPrice(BigDecimal roomPrice) {
        this.roomPrice = roomPrice;
     }
-    public double getRoomPrice() {
+    public BigDecimal getRoomPrice() {
        return roomPrice;
     }
 
