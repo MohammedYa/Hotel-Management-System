@@ -3,6 +3,7 @@ package Booking.Entite;
 import Booking.Enums.BookingStatus;
 
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Booking {
@@ -13,15 +14,17 @@ private  int bookingId;
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
     private BookingStatus bookingStatus;
+    private BigDecimal totalPrice;
 
-    public Booking(int bookingId, int customerId, int roomNumber, LocalDate checkInDate, LocalDate checkOutDate,BookingStatus bookingStatus) {
+    public Booking(int bookingId, int customerId, int roomNumber, LocalDate checkInDate,
+                   LocalDate checkOutDate,BookingStatus bookingStatus,BigDecimal totalPrice) {
         setBookingId(bookingId);
         setCustomerId(customerId);
         setRoomNumber(roomNumber);
         setCheckInDate(checkInDate);
         setCheckOutDate(checkOutDate);
         setBookingStatus(bookingStatus);
-
+        setTotalPrice(totalPrice);
 
     }
 
@@ -73,6 +76,14 @@ private  int bookingId;
         this.bookingStatus = bookingStatus;
     }
 
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
 
     @Override
     public boolean equals(Object obj) {
@@ -103,6 +114,7 @@ private  int bookingId;
                 "Check In Date  : " + this.checkInDate + "\n" +
                 "Check Out Date : " + this.checkOutDate + "\n" +
                 "Booking Status : " + this.bookingStatus + "\n" +
+                "Booking Costs : " + this.totalPrice + "\n" +
                 "==================================";
     }
 

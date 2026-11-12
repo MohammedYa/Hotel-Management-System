@@ -9,6 +9,10 @@ import Customers.Packages.CustomerRepository;
 import Customers.Packages.ManagementCustomers;
 import Customers.Services.CustomerService;
 import Customers.Services.CustomerServiceImpl;
+import Payment.Packages.PaymentManagement;
+import Payment.Packages.PaymentRepository;
+import Payment.Services.PaymentService;
+import Payment.Services.PaymentServiceImpl;
 import Rooms.pakages.ManagementRooms;
 import Rooms.pakages.RoomRepository;
 import Rooms.service.RoomService;
@@ -25,7 +29,7 @@ public class HotelSystem {
     RoomRepository roomRepository = new RoomRepository();
     CustomerRepository customerRepository = new CustomerRepository();
     BookingRepository bookingRepository = new BookingRepository();
-
+    PaymentRepository paymentRepository = new PaymentRepository();
     // 2. Booking Service
     BookingService bookingService = new BookingServiceImpl(
             bookingRepository,
@@ -38,13 +42,13 @@ public class HotelSystem {
     RoomService roomService = new RoomServiceImpl(roomRepository,bookingService);
     CustomerService customerService =new CustomerServiceImpl(customerRepository, bookingService);
     CheckInOutService checkInOutService = new CheckInOutServiceImpl(bookingRepository, roomRepository);
-
+    PaymentService  paymentService = new PaymentServiceImpl(paymentRepository,bookingRepository);
     // 4. Management
     ManagementRooms managementRooms = new ManagementRooms(roomService);
     ManagementCustomers managementCustomers = new ManagementCustomers(customerService);
-    ManagementBooking managementBooking = new ManagementBooking(bookingService);
+    ManagementBooking managementBooking = new ManagementBooking(bookingService,roomRepository);
     ManagementCheckInOut managementCheckInOut = new ManagementCheckInOut(checkInOutService);
-
+    PaymentManagement paymentManagement= new PaymentManagement(paymentService);
     public void Start(){
         int countOfChoice=0;
         boolean flag=true;
@@ -87,7 +91,7 @@ public class HotelSystem {
                         break;
                     case 5:
                         countOfChoice=0;
-                        System.out.print("\n========== Payment Management ==========\n");
+                        paymentManagement.Start();
                         break;
                     case 6:
                         countOfChoice=0;

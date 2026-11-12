@@ -3,8 +3,12 @@ package Booking.Packages;
 import Booking.Entite.Booking;
 import Booking.Enums.BookingStatus;
 import Booking.services.BookingService;
+import Rooms.entite.Room;
+import Rooms.pakages.RoomRepository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -12,10 +16,12 @@ import java.util.Scanner;
 public class ManagementBooking {
     final  private BookingService bookingService;
     private final Scanner scanner = new Scanner(System.in);
+    private  final RoomRepository roomRepository;
     private final BookingMenu bookingMenu = new BookingMenu();
 
-  public   ManagementBooking(BookingService bookingService) {
+  public   ManagementBooking(BookingService bookingService, RoomRepository roomRepository) {
         this.bookingService = bookingService;
+        this.roomRepository = roomRepository;
     }
 
     public  void Start(){
@@ -103,6 +109,13 @@ public class ManagementBooking {
 
         System.out.print("Enter Check-out Date (YYYY-MM-DD): ");
         LocalDate checkOutDate = LocalDate.parse(scanner.next());
+        long numberOfNights = ChronoUnit.DAYS.between(
+                checkInDate,
+                checkOutDate
+        );
+        Room room =roomRepository.searchRoom(roomNumber);
+        BigDecimal totalPrice = room.getRoomPrice()
+                .multiply(BigDecimal.valueOf(numberOfNights));
 
         Booking booking = new Booking(
                 bookingId,
@@ -110,7 +123,8 @@ public class ManagementBooking {
                 roomNumber,
                 checkInDate,
                 checkOutDate,
-                BookingStatus.CONFIRMED
+                BookingStatus.CONFIRMED,
+                totalPrice
         );
 
         if (bookingService.addBooking(booking)) {
@@ -189,13 +203,22 @@ public class ManagementBooking {
         System.out.print("Enter Check-out Date (YYYY-MM-DD): ");
         LocalDate checkOutDate = LocalDate.parse(scanner.next());
 
+        long numberOfNights = ChronoUnit.DAYS.between(
+                checkInDate,
+                checkOutDate
+        );
+        Room room =roomRepository.searchRoom(roomNumber);
+        BigDecimal totalPrice = room.getRoomPrice()
+                .multiply(BigDecimal.valueOf(numberOfNights));
+
         Booking bookingUpdate = new Booking(
                 bookingId,
                 customerId,
                 roomNumber,
                 checkInDate,
                 checkOutDate,
-                booking.getBookingStatus()
+                booking.getBookingStatus(),
+                totalPrice
         );
 
         boolean bookingUpdated =
