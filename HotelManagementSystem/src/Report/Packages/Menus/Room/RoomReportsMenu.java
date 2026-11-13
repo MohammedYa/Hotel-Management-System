@@ -2,8 +2,17 @@ package Report.Packages.Menus.Room;
 
 import java.util.InputMismatchException;
 
+/**
+ * Displays the available room reports and allows users
+ * to select a specific report from the console menu.
+ */
 public class RoomReportsMenu {
 
+    /**
+     * Prints the room reports menu to the console,
+     * including options to display all rooms, filter rooms
+     * by status, room type, capacity, or price range.
+     */
     public void displayMenu() {
         System.out.println("\n========== ROOM REPORTS ==========");
         System.out.println("1. All Rooms");
@@ -23,12 +32,5 @@ public class RoomReportsMenu {
         System.out.println("==================================");
         System.out.print("Enter your choice: ");
     }
-
-
-
-
-
-
-
 
 }

@@ -1,6 +1,16 @@
 package Payment.Packages;
 
+/**
+ * Displays the menu options available for payment management.
+ */
 public class PaymentMenu {
+
+    /**
+     * Prints the payment management menu to the console,
+     * including options for adding payments, searching payments,
+     * displaying all payments, viewing payments by booking,
+     * and displaying a booking payment summary.
+     */
     public void displayMenu() {
 
         System.out.println("\n");
