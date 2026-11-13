@@ -6,13 +6,11 @@ import Booking.Packages.BookingRepository;
 import Rooms.Enums.RoomStatus;
 import Rooms.entite.Room;
 import Rooms.pakages.RoomRepository;
-
 import java.time.LocalDate;
 
 public class CheckInOutServiceImpl implements CheckInOutService {
     private final BookingRepository bookingRepository;
     private final RoomRepository roomRepository ;
-
     public CheckInOutServiceImpl(BookingRepository bookingRepository, RoomRepository roomRepository) {
         this.bookingRepository = bookingRepository;
         this.roomRepository = roomRepository;

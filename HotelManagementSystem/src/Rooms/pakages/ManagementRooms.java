@@ -6,6 +6,7 @@ import Rooms.Enums.RoomTybe;
 import Rooms.entite.Room;
 import Rooms.service.RoomService;
 
+import java.math.BigDecimal;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -207,8 +208,8 @@ public class ManagementRooms {
             }
         }
 
-        System.out.print("Enter the Room Price: ");
-        double roomPrice = scanner.nextDouble();
+        System.out.print("Enter Room Price: ");
+        BigDecimal roomPrice = scanner.nextBigDecimal();
 
         System.out.print("Enter the Room Capacity: ");
         int roomCapacity = scanner.nextInt();
@@ -391,7 +392,7 @@ public class ManagementRooms {
         }
 
         System.out.print("Enter Room Price: ");
-        double roomPrice = scanner.nextDouble();
+        BigDecimal roomPrice = scanner.nextBigDecimal();
 
         System.out.print("Enter Room Capacity: ");
         int roomCapacity = scanner.nextInt();

@@ -13,6 +13,13 @@ import Payment.Packages.PaymentManagement;
 import Payment.Packages.PaymentRepository;
 import Payment.Services.PaymentService;
 import Payment.Services.PaymentServiceImpl;
+import Report.Packages.Menus.Booking.BookingsReportsManegment;
+import Report.Packages.Menus.Customer.CustomerReportsManegment;
+import Report.Packages.Menus.Payment.PaymentReportsManegment;
+import Report.Packages.Menus.Room.RoomReportsManegment;
+import Report.Packages.ReportsMangement;
+import Report.Services.ReportService;
+import Report.Services.ReportServiceImpl;
 import Rooms.pakages.ManagementRooms;
 import Rooms.pakages.RoomRepository;
 import Rooms.service.RoomService;
@@ -43,12 +50,19 @@ public class HotelSystem {
     CustomerService customerService =new CustomerServiceImpl(customerRepository, bookingService);
     CheckInOutService checkInOutService = new CheckInOutServiceImpl(bookingRepository, roomRepository);
     PaymentService  paymentService = new PaymentServiceImpl(paymentRepository,bookingRepository);
+    ReportService  reportService = new ReportServiceImpl(roomRepository,bookingRepository,paymentRepository,customerRepository);
     // 4. Management
     ManagementRooms managementRooms = new ManagementRooms(roomService);
     ManagementCustomers managementCustomers = new ManagementCustomers(customerService);
     ManagementBooking managementBooking = new ManagementBooking(bookingService,roomRepository);
     ManagementCheckInOut managementCheckInOut = new ManagementCheckInOut(checkInOutService);
     PaymentManagement paymentManagement= new PaymentManagement(paymentService);
+
+    PaymentReportsManegment paymentReportsManegment =new PaymentReportsManegment(reportService);
+    BookingsReportsManegment bookingsReportsManegment=new BookingsReportsManegment(reportService);
+    CustomerReportsManegment   customerReportsManegment=new CustomerReportsManegment(reportService);
+    RoomReportsManegment roomReportsManegment =new RoomReportsManegment(reportService);
+    ReportsMangement  reportsMangement =new ReportsMangement(bookingsReportsManegment,paymentReportsManegment,customerReportsManegment,roomReportsManegment);
     public void Start(){
         int countOfChoice=0;
         boolean flag=true;
@@ -96,6 +110,7 @@ public class HotelSystem {
                     case 6:
                         countOfChoice=0;
                         System.out.print("\n========== Report Management ==========\n");
+                        reportsMangement.Start();
                         break;
                     default:
                         countOfChoice++;
