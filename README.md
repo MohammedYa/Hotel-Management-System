@@ -146,4 +146,4 @@ Key objectives:
 **Mohamed Yasser**
 
 - GitHub: [MohammedYa](https://github.com/MohammedYa)
-- LinkedIn
+- LinkedIn: [Mohamed Yasser](https://www.linkedin.com/in/mohamed-el3sawy/)
