@@ -1,6 +1,15 @@
 package Booking.Packages;
 
+/**
+ * Displays the menu options available for booking management.
+ */
 public class BookingMenu {
+
+    /**
+     * Prints the booking management menu to the console,
+     * including options for adding, displaying, searching,
+     * updating, and cancelling bookings.
+     */
     public void displayMenu() {
 
         System.out.println("\n");

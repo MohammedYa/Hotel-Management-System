@@ -2,8 +2,17 @@ package Report.Packages.Menus.Booking;
 
 import java.util.InputMismatchException;
 
+/**
+ * Displays the available booking reports and allows users
+ * to select a specific report from the console menu.
+ */
 public class BookingReportsMenu {
 
+    /**
+     * Prints the booking reports menu to the console,
+     * including options to display all bookings, filter bookings
+     * by status, customer ID, room number, or date range.
+     */
     public void displayMenu() {
         System.out.println("\n========== BOOKING REPORTS ==========");
         System.out.println("1. All Bookings");
@@ -20,7 +29,5 @@ public class BookingReportsMenu {
         System.out.println("=====================================");
         System.out.print("Enter your choice: ");
     }
-
-
 
 }

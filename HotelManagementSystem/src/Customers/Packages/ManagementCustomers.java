@@ -1,114 +1,233 @@
+
 package Customers.Packages;
 
 import Customers.Entite.Customer;
 import Customers.Services.CustomerService;
+import Validations.ValidationUtils;
 
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Handles user interactions related to customer management.
+ *
+ * Provides operations for adding, displaying, searching,
+ * updating, and deleting customers.
+ */
 public class ManagementCustomers {
 
     private final CustomerService customerService;
-    CustomerMenu customerMenu = new CustomerMenu();
-    Scanner scanner = new Scanner(System.in);
+    private final CustomerMenu customerMenu = new CustomerMenu();
+    private final Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Constructs ManagementCustomers with the required service.
+     *
+     * @param customerService service responsible for customer operations
+     * @throws IllegalArgumentException if customerService is null
+     */
     public ManagementCustomers(CustomerService customerService) {
+
+        ValidationUtils.requireNotNull(customerService, "Customer Service");
+
         this.customerService = customerService;
     }
 
+    /**
+     * Starts the customer management menu.
+     *
+     * Allows the user three invalid menu attempts before exiting.
+     */
+    public void Start() {
 
+        boolean flag = true;
+        int tryChoiceCount = 0;
 
-    public  void Start(){
-      boolean  flag=true;
-      int tryChoiceCount=0;
         while (flag) {
+
+            customerMenu.displayMenu();
+            System.out.print("Enter Your Choice: ");
+
+            String input = scanner.nextLine();
+
+            int choice;
+
             try {
-                customerMenu.displayMenu();
-                System.out.print("  Enter Your Choice: ");
-                int choice = scanner.nextInt();
-                switch(choice){
-                    case 0:
-                        flag=false;
-                        break;
-                    case 1:
-                        tryChoiceCount=0;
-                        addCustomer();
-                        break;
-                    case 2:
-                        tryChoiceCount=0;
-                        displayAllCustomers();
-                        break;
-                    case 3:
-                        tryChoiceCount=0;
-                        displayCustomerById();
-                        break;
-                    case 4:
-                        tryChoiceCount=0;
-                        updateCustomer();
-                        break;
-                    case 5:
-                        tryChoiceCount=0;
-                        deleteCustomer();
-                        break;
-                    default:
-                        System.out.println("Invalid Choice You have Chosen  Number between 0-5 ");
-                        System.out.println("You have " + (3 - tryChoiceCount) + " chances left.");
-                        tryChoiceCount++;
-                        if (tryChoiceCount >=3) {
+                choice = Integer.parseInt(input.trim());
+            } catch (NumberFormatException e) {
 
-                            System.out.println("Invalid Choice Try again later ");
-                            flag=false;
+                tryChoiceCount++;
 
-                        }
+                System.out.println(
+                        "Invalid input! Please enter a number between 0-5."
+                );
+                System.out.println(
+                        "You have " + (3 - tryChoiceCount) + " chances left."
+                );
 
+                if (tryChoiceCount >= 3) {
+                    System.out.println("Invalid Choice. Try again later.");
+                    flag = false;
                 }
+
+                continue;
             }
-            catch (InputMismatchException e) {
-                scanner.nextLine();
-                if (tryChoiceCount>=3){
-                    System.out.println("Invalid Choice try again later");
-                    flag=false;
-                }
-                else{
-                    System.out.println("You have entered the correct choice 0-5");
+
+            switch (choice) {
+
+                case 0:
+                    flag = false;
+                    break;
+
+                case 1:
+                    tryChoiceCount = 0;
+                    addCustomer();
+                    break;
+
+                case 2:
+                    tryChoiceCount = 0;
+                    displayAllCustomers();
+                    break;
+
+                case 3:
+                    tryChoiceCount = 0;
+                    displayCustomerById();
+                    break;
+
+                case 4:
+                    tryChoiceCount = 0;
+                    updateCustomer();
+                    break;
+
+                case 5:
+                    tryChoiceCount = 0;
+                    deleteCustomer();
+                    break;
+
+                default:
                     tryChoiceCount++;
-                    System.out.println("You have " + (3 - tryChoiceCount) + " chances left.");
 
-                }
+                    System.out.println(
+                            "Invalid Choice! Enter a number between 0-5."
+                    );
+                    System.out.println(
+                            "You have " + (3 - tryChoiceCount) + " chances left."
+                    );
+
+                    if (tryChoiceCount >= 3) {
+                        System.out.println("Invalid Choice. Try again later.");
+                        flag = false;
+                    }
+            }
+        }
+    }
+
+    /**
+     * Reads an integer from the user.
+     *
+     * Repeats the input operation until a valid integer is entered.
+     *
+     * @param message prompt displayed to the user
+     * @return integer entered by the user
+     */
+    private int readInt(String message) {
+
+        while (true) {
+
+            System.out.print(message);
+            String input = scanner.nextLine();
+
+            try {
+                return Integer.parseInt(input.trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! Please enter a valid number.");
+            }
+        }
+    }
+
+    /**
+     * Reads a positive integer from the user.
+     *
+     * @param message prompt displayed to the user
+     * @return positive integer entered by the user
+     */
+    private int readPositiveInt(String message) {
+
+        while (true) {
+
+            int value = readInt(message);
+
+            if (value > 0) {
+                return value;
             }
 
+            System.out.println("Value must be greater than zero!");
         }
-
     }
 
+    /**
+     * Reads a non-blank text value from the user.
+     *
+     * @param message prompt displayed to the user
+     * @return non-blank text entered by the user
+     */
+    private String readNonBlank(String message) {
 
+        while (true) {
+
+            System.out.print(message);
+            String value = scanner.nextLine();
+
+            if (!value.isBlank()) {
+                return value.trim();
+            }
+
+            System.out.println("This field cannot be empty!");
+        }
+    }
+
+    /**
+     * Adds a new customer after collecting the required information.
+     *
+     * @throws IllegalArgumentException if customer data violates
+     *                                  entity validation rules
+     */
     private void addCustomer() {
-        System.out.print("\n==========Add Customer Page ==========\n");
 
-        System.out.print("Enter the Customer Id: ");
-        int customerId = scanner.nextInt();
-        scanner.nextLine();
-        System.out.print("Enter the Customer Name: ");
-        String customerName = scanner.nextLine();
-        System.out.print("Enter the Customer Phone: ");
-        String customerPhone = scanner.next();
-        System.out.print("Enter the Customer Email: ");
-        String customerEmail = scanner.next();
+        System.out.println("\n========== Add Customer Page ==========");
 
+        int customerId = readPositiveInt("Enter the Customer ID: ");
 
-        Customer customer = new Customer(customerId, customerName, customerPhone, customerEmail);
-        if (customerService.addCustomer(customer)){
+        String customerName = readNonBlank("Enter the Customer Name: ");
+
+        String customerPhone = readNonBlank("Enter the Customer Phone: ");
+
+        String customerEmail = readNonBlank("Enter the Customer Email: ");
+
+        Customer customer = new Customer(
+                customerId,
+                customerName,
+                customerPhone,
+                customerEmail
+        );
+
+        if (customerService.addCustomer(customer)) {
             System.out.println("Customer added successfully!");
+        } else {
+            System.out.println(
+                    "Customer not added --- Customer already exists!"
+            );
         }
-        else {
-            System.out.println("Customer not added  ---  Customer is already Exist!");
-        }
-
     }
 
-    private  void displayAllCustomers() {
-        System.out.print("\n==========All Customers Page ==========\n");
+    /**
+     * Displays all customers registered in the system.
+     *
+     * Displays a message if no customers are available.
+     */
+    private void displayAllCustomers() {
+
+        System.out.println("\n========== All Customers Page ==========");
 
         List<Customer> customers = customerService.getAllCustomers();
 
@@ -117,63 +236,86 @@ public class ManagementCustomers {
         } else {
             customers.forEach(System.out::println);
         }
-
     }
 
-    private  void displayCustomerById() {
-        System.out.print("\n==========Display Customers By Id Page ==========\n");
+    /**
+     * Searches for a customer using the customer ID
+     * and displays the customer's information.
+     */
+    private void displayCustomerById() {
 
-        System.out.print("Enter Customer Id: ");
-        int customerId = scanner.nextInt();
-        scanner.nextLine();
+        System.out.println("\n========== Display Customer By ID Page ==========");
+
+        int customerId = readPositiveInt("Enter Customer ID: ");
+
         Customer customer = customerService.findCustomerById(customerId);
 
-        if(customer==null){
+        if (customer == null) {
             System.out.println("Customer not found!");
-        }
-        else {
+        } else {
             System.out.println(customer);
         }
-
     }
 
+    /**
+     * Deletes an existing customer using the customer ID.
+     *
+     * @implNote The service handles the related booking cancellation
+     *           rules before deleting the customer.
+     */
     private void deleteCustomer() {
-        System.out.print("\n==========Delete Customers By Id Page ==========\n");
 
-        System.out.print("Enter the Customer Id: ");
-        int customerId = scanner.nextInt();
-        if (customerService.deleteCustomer(customerId)){
+        System.out.println("\n========== Delete Customer By ID Page ==========");
+
+        int customerId = readPositiveInt("Enter the Customer ID: ");
+
+        if (customerService.deleteCustomer(customerId)) {
             System.out.println("Customer deleted successfully!");
-        }
-        else {
-            System.out.println("Customer not deleted  ---  Customer is not exist!");
+        } else {
+            System.out.println(
+                    "Customer not deleted --- Customer does not exist!"
+            );
         }
     }
 
+    /**
+     * Updates an existing customer's information.
+     *
+     * Collects the new customer name, phone, and email,
+     * then delegates the update operation to CustomerService.
+     */
     private void updateCustomer() {
-        System.out.print("\n==========Update Customers By Id Page ==========\n");
 
-        System.out.print("Enter the Customer Id: ");
-        int customerId = scanner.nextInt();
-        scanner.nextLine();
+        System.out.println("\n========== Update Customer By ID Page ==========");
+
+        int customerId = readPositiveInt("Enter the Customer ID: ");
+
         Customer customer = customerService.findCustomerById(customerId);
-        if (customer!=null){
-            System.out.print("Enter the Customer Name: ");
-            String customerName = scanner.nextLine();
-            System.out.print("Enter the Customer Phone: ");
-            String customerPhone = scanner.nextLine();
-            System.out.print("Enter the Customer Email: ");
-            String customerEmail = scanner.nextLine();
-            Customer customerUpdate = new Customer(customerId, customerName, customerPhone, customerEmail);
-            if (customerService.updateCustomer(customerId, customerUpdate)){
-                System.out.println("Customer updated successfully!");
-            }
 
+        if (customer == null) {
+            System.out.println(
+                    "Customer not updated --- Customer does not exist!"
+            );
+            return;
         }
-        else {
-            System.out.println("Customer not updated  ---  Customer is not exist!");
+
+        String customerName = readNonBlank("Enter the Customer Name: ");
+
+        String customerPhone = readNonBlank("Enter the Customer Phone: ");
+
+        String customerEmail = readNonBlank("Enter the Customer Email: ");
+
+        Customer customerUpdate = new Customer(
+                customerId,
+                customerName,
+                customerPhone,
+                customerEmail
+        );
+
+        if (customerService.updateCustomer(customerId, customerUpdate)) {
+            System.out.println("Customer updated successfully!");
+        } else {
+            System.out.println("Customer update failed!");
         }
     }
-
-
 }

@@ -1,6 +1,15 @@
 package Customers.Packages;
 
+/**
+ * Displays the menu options available for customer management.
+ */
 public class CustomerMenu {
+
+    /**
+     * Prints the customer management menu to the console,
+     * including options for adding, displaying, searching,
+     * updating, and deleting customers.
+     */
     public void displayMenu() {
 
         System.out.println("\n");

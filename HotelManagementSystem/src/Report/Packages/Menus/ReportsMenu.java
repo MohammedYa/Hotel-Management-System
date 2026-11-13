@@ -1,6 +1,15 @@
 package Report.Packages.Menus;
 
+/**
+ * Displays the main report management menu and allows users
+ * to navigate to the different report categories.
+ */
 public class ReportsMenu {
+
+    /**
+     * Prints the report management menu to the console,
+     * including options for room, customer, booking, and payment reports.
+     */
     public void displayMenu() {
         System.out.println("\n========== REPORT MANAGEMENT ==========");
         System.out.println("1. Room Reports");

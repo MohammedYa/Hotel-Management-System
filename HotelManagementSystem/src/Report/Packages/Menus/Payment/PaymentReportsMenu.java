@@ -2,8 +2,18 @@ package Report.Packages.Menus.Payment;
 
 import java.util.InputMismatchException;
 
+/**
+ * Displays the available payment reports and allows users
+ * to select a specific report from the console menu.
+ */
 public class PaymentReportsMenu {
 
+    /**
+     * Prints the payment reports menu to the console,
+     * including options to display all payments, filter payments
+     * by booking ID, transaction status, transaction type,
+     * or date range.
+     */
     public void displayMenu() {
         System.out.println("\n========== PAYMENT REPORTS ==========");
         System.out.println("1. All Payments");
