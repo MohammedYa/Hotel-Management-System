@@ -39,7 +39,7 @@ public class PaymentManagement {
      *
      * Allows the user three invalid menu attempts before exiting.
      */
-    public void Start() {
+    public void start() {
 
         boolean flag = true;
         int tryChoiceCount = 0;

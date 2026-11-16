@@ -168,28 +168,28 @@ public class HotelSystem {
 
                     case 2:
                         countOfChoice = 0;
-                        managementCustomers.Start();
+                        managementCustomers.start();
                         break;
 
                     case 3:
                         countOfChoice = 0;
-                        managementBooking.Start();
+                        managementBooking.start();
                         break;
 
                     case 4:
                         countOfChoice = 0;
-                        managementCheckInOut.Start();
+                        managementCheckInOut.start();
                         break;
 
                     case 5:
                         countOfChoice = 0;
-                        paymentManagement.Start();
+                        paymentManagement.start();
                         break;
 
                     case 6:
                         countOfChoice = 0;
                         System.out.print("\n========== Report Management ==========\n");
-                        reportsMangement.Start();
+                        reportsMangement.start();
                         break;
 
                     default:

@@ -69,7 +69,7 @@ public class ReportsMangement {
     *
     * Allows the user three invalid menu attempts before exiting.
     */
-   public void Start() {
+   public void start() {
 
       boolean flag = true;
       int tryChoiceCount = 0;
@@ -117,22 +117,22 @@ public class ReportsMangement {
 
             case 1:
                tryChoiceCount = 0;
-               roomReportsManegment.Start();
+               roomReportsManegment.start();
                break;
 
             case 2:
                tryChoiceCount = 0;
-               customerMangment.Start();
+               customerMangment.start();
                break;
 
             case 3:
                tryChoiceCount = 0;
-               bookingsMangment.Start();
+               bookingsMangment.start();
                break;
 
             case 4:
                tryChoiceCount = 0;
-               paymentMangment.Start();
+               paymentMangment.start();
                break;
 
             default:
