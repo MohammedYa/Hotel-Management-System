@@ -1,4 +1,4 @@
-package Rooms.pakages;
+package Rooms.Pakages;
 
 import Rooms.entite.Room;
 import Rooms.Enums.RoomStatus;

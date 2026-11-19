@@ -1,8 +1,7 @@
-package Booking.services;
+package Booking.Services;
 
 import Booking.Entite.Booking;
 
-import java.util.Collections;
 import java.util.List;
 
 /**

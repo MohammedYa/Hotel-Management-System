@@ -7,7 +7,7 @@ import Booking.Packages.BookingRepository;
 import Payment.Services.PaymentService;
 import Rooms.Enums.RoomStatus;
 import Rooms.entite.Room;
-import Rooms.pakages.RoomRepository;
+import Rooms.Pakages.RoomRepository;
 import Validations.ValidationUtils;
 
 import java.time.LocalDate;

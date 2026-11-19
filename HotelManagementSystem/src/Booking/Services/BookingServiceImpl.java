@@ -1,11 +1,11 @@
 
-package Booking.services;
+package Booking.Services;
 
 import Booking.Entite.Booking;
 import Booking.Enums.BookingStatus;
 import Booking.Packages.BookingRepository;
 import Customers.Packages.CustomerRepository;
-import Rooms.pakages.RoomRepository;
+import Rooms.Pakages.RoomRepository;
 import Validations.ValidationUtils;
 
 import java.util.List;
@@ -74,24 +74,13 @@ public class BookingServiceImpl implements BookingService {
             return false;
         }
 
-        // 4. Check Booking Conflicts
-        boolean hasConflict = bookingRepository.getBookings().stream()
-                .filter(oldBooking ->
-                        oldBooking.getRoomNumber() == booking.getRoomNumber())
-                .filter(oldBooking ->
-                        oldBooking.getBookingStatus() != BookingStatus.CANCELLED)
-                .anyMatch(oldBooking ->
-                        booking.getCheckInDate().isBefore(oldBooking.getCheckOutDate())
-                                &&
-                                booking.getCheckOutDate().isAfter(oldBooking.getCheckInDate())
-                );
-
-        if (hasConflict) {
+        // 4. Check Duplicate Booking ID
+        if (bookingRepository.searchBooking(booking.getBookingId()) != null) {
             return false;
         }
 
-        // 5. Check Duplicate Booking ID
-        if (bookingRepository.searchBooking(booking.getBookingId()) != null) {
+        // 5. Check Booking Conflicts
+        if (hasBookingConflict(booking, -1)) {
             return false;
         }
 
@@ -193,21 +182,7 @@ public class BookingServiceImpl implements BookingService {
         }
 
         // 7. Check Booking Conflicts
-        boolean hasConflict = bookingRepository.getBookings().stream()
-                .filter(oldBooking -> oldBooking.getBookingId() != bookingId)
-                .filter(oldBooking ->
-                        oldBooking.getRoomNumber() == updatedBooking.getRoomNumber())
-                .filter(oldBooking ->
-                        oldBooking.getBookingStatus() != BookingStatus.CANCELLED)
-                .anyMatch(oldBooking ->
-                        updatedBooking.getCheckInDate()
-                                .isBefore(oldBooking.getCheckOutDate())
-                                &&
-                                updatedBooking.getCheckOutDate()
-                                        .isAfter(oldBooking.getCheckInDate())
-                );
-
-        if (hasConflict) {
+        if (hasBookingConflict(updatedBooking, bookingId)) {
             return false;
         }
 
@@ -239,8 +214,8 @@ public class BookingServiceImpl implements BookingService {
 
         List<Booking> bookingsCustomerById = bookingRepository.getBookings().stream()
                 .filter(booking ->
-                        booking.getCustomerId() == customerId &&
-                                booking.getBookingStatus() == BookingStatus.CONFIRMED)
+                        booking.getCustomerId() == customerId
+                                && booking.getBookingStatus() == BookingStatus.CONFIRMED)
                 .toList();
 
         if (bookingsCustomerById.isEmpty()) {
@@ -267,8 +242,8 @@ public class BookingServiceImpl implements BookingService {
 
         List<Booking> bookingsRoomNumber = bookingRepository.getBookings().stream()
                 .filter(booking ->
-                        booking.getRoomNumber() == roomNumber &&
-                                booking.getBookingStatus() == BookingStatus.CONFIRMED)
+                        booking.getRoomNumber() == roomNumber
+                                && booking.getBookingStatus() == BookingStatus.CONFIRMED)
                 .toList();
 
         if (bookingsRoomNumber.isEmpty()) {
@@ -279,5 +254,33 @@ public class BookingServiceImpl implements BookingService {
                 booking.setBookingStatus(BookingStatus.CANCELLED));
 
         return true;
+    }
+
+    /**
+     * Checks whether another non-cancelled booking conflicts
+     * with the given booking for the same room.
+     *
+     * @param booking booking to check
+     * @param excludedBookingId booking ID to exclude during updates
+     * @return true if a conflicting booking exists
+     */
+    private boolean hasBookingConflict(
+            Booking booking,
+            int excludedBookingId) {
+
+        return bookingRepository.getBookings().stream()
+                .filter(existingBooking ->
+                        existingBooking.getBookingId() != excludedBookingId)
+                .filter(existingBooking ->
+                        existingBooking.getRoomNumber() == booking.getRoomNumber())
+                .filter(existingBooking ->
+                        existingBooking.getBookingStatus() != BookingStatus.CANCELLED)
+                .anyMatch(existingBooking ->
+                        booking.getCheckInDate().isBefore(
+                                existingBooking.getCheckOutDate())
+                                &&
+                                booking.getCheckOutDate().isAfter(
+                                        existingBooking.getCheckInDate())
+                );
     }
 }

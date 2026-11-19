@@ -16,7 +16,7 @@ import Payment.Packages.PaymentRepository;
 import Rooms.Enums.RoomStatus;
 import Rooms.Enums.RoomTybe;
 import Rooms.entite.Room;
-import Rooms.pakages.RoomRepository;
+import Rooms.Pakages.RoomRepository;
 
 import Validations.ValidationUtils;
 

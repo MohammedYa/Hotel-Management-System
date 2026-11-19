@@ -3,15 +3,15 @@ package Booking.Packages;
 
 import Booking.Entite.Booking;
 import Booking.Enums.BookingStatus;
-import Booking.services.BookingService;
+import Booking.Services.BookingPriceCalculator;
+import Booking.Services.BookingService;
 import Rooms.entite.Room;
-import Rooms.pakages.RoomRepository;
+import Rooms.Service.RoomService;
 import Validations.ValidationUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Scanner;
 
@@ -22,28 +22,31 @@ import java.util.Scanner;
  * displaying, and cancelling bookings.
  */
 public class ManagementBooking {
-
+    private final BookingPriceCalculator priceCalculator ;
     private final BookingService bookingService;
     private final Scanner scanner = new Scanner(System.in);
-    private final RoomRepository roomRepository;
+    private final RoomService roomService;
     private final BookingMenu bookingMenu = new BookingMenu();
 
     /**
      * Constructs ManagementBooking with the required dependencies.
      *
      * @param bookingService service used to manage bookings
-     * @param roomRepository repository used to retrieve room information
+     * @param roomService service used to retrieve room information
      * @throws IllegalArgumentException if any dependency is null
      */
     public ManagementBooking(
             BookingService bookingService,
-            RoomRepository roomRepository) {
+            RoomService roomService,
+            BookingPriceCalculator priceCalculator) {
 
         ValidationUtils.requireNotNull(bookingService, "Booking Service");
-        ValidationUtils.requireNotNull(roomRepository, "Room Repository");
+        ValidationUtils.requireNotNull(roomService, "Room Service");
+        ValidationUtils.requireNotNull(priceCalculator, "Booking Price Calculator");
 
         this.bookingService = bookingService;
-        this.roomRepository = roomRepository;
+        this.roomService = roomService;
+        this.priceCalculator = priceCalculator;
     }
 
     /**
@@ -193,28 +196,7 @@ public class ManagementBooking {
         }
     }
 
-    /**
-     * Calculates the total booking price based on the room price
-     * and the number of nights.
-     *
-     * @param room room associated with the booking
-     * @param checkInDate booking check-in date
-     * @param checkOutDate booking check-out date
-     * @return total booking price
-     */
-    private BigDecimal calculateTotalPrice(
-            Room room,
-            LocalDate checkInDate,
-            LocalDate checkOutDate) {
 
-        long numberOfNights = ChronoUnit.DAYS.between(
-                checkInDate,
-                checkOutDate
-        );
-
-        return room.getRoomPrice()
-                .multiply(BigDecimal.valueOf(numberOfNights));
-    }
 
     /**
      * Adds a new booking after collecting the required information.
@@ -235,7 +217,7 @@ public class ManagementBooking {
 
         int roomNumber = readPositiveInt("Enter Room Number: ");
 
-        Room room = roomRepository.searchRoom(roomNumber);
+        Room room = roomService.searchRoom(roomNumber);
 
         if (room == null) {
             System.out.println("Room Not Found!");
@@ -257,7 +239,7 @@ public class ManagementBooking {
             return;
         }
 
-        BigDecimal totalPrice = calculateTotalPrice(
+        BigDecimal totalPrice = priceCalculator.calculate(
                 room,
                 checkInDate,
                 checkOutDate
@@ -362,7 +344,7 @@ public class ManagementBooking {
 
         int roomNumber = readPositiveInt("Enter Room Number: ");
 
-        Room room = roomRepository.searchRoom(roomNumber);
+        Room room = roomService.searchRoom(roomNumber);
 
         if (room == null) {
             System.out.println("Room Not Found!");
@@ -384,7 +366,7 @@ public class ManagementBooking {
             return;
         }
 
-        BigDecimal totalPrice = calculateTotalPrice(
+        BigDecimal totalPrice = priceCalculator.calculate(
                 room,
                 checkInDate,
                 checkOutDate

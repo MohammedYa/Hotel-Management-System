@@ -1,4 +1,4 @@
-package Rooms.pakages;
+package Rooms.Pakages;
 
 /**
  * Provides the console menu for managing hotel rooms.
