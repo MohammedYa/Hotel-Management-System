@@ -1,7 +1,8 @@
 import Booking.Packages.BookingRepository;
 import Booking.Packages.ManagementBooking;
-import Booking.services.BookingService;
-import Booking.services.BookingServiceImpl;
+import Booking.Services.BookingPriceCalculator;
+import Booking.Services.BookingService;
+import Booking.Services.BookingServiceImpl;
 import CheckInOut.Packages.ManagementCheckInOut;
 import CheckInOut.Services.CheckInOutService;
 import CheckInOut.Services.CheckInOutServiceImpl;
@@ -20,10 +21,10 @@ import Report.Packages.Menus.Room.RoomReportsManegment;
 import Report.Packages.ReportsMangement;
 import Report.Services.ReportService;
 import Report.Services.ReportServiceImpl;
-import Rooms.pakages.ManagementRooms;
-import Rooms.pakages.RoomRepository;
-import Rooms.service.RoomService;
-import Rooms.service.RoomServiceImpl;
+import Rooms.Pakages.ManagementRooms;
+import Rooms.Pakages.RoomRepository;
+import Rooms.Service.RoomService;
+import Rooms.Service.RoomServiceImpl;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -86,7 +87,7 @@ public class HotelSystem {
     ReportService reportService = new ReportServiceImpl(
             roomRepository, bookingRepository, paymentRepository, customerRepository
     );
-
+    BookingPriceCalculator  bookingPriceCalculator = new BookingPriceCalculator();
     // 4. Management
 
     /** Management component responsible for room operations and user interaction. */
@@ -96,7 +97,7 @@ public class HotelSystem {
     ManagementCustomers managementCustomers = new ManagementCustomers(customerService);
 
     /** Management component responsible for booking operations and user interaction. */
-    ManagementBooking managementBooking = new ManagementBooking(bookingService, roomRepository);
+    ManagementBooking managementBooking = new ManagementBooking(bookingService, roomService,bookingPriceCalculator);
 
     /** Management component responsible for check-in and check-out operations. */
     ManagementCheckInOut managementCheckInOut = new ManagementCheckInOut(checkInOutService);

@@ -1,10 +1,10 @@
 
-package Rooms.pakages;
+package Rooms.Pakages;
 
 import Rooms.Enums.RoomStatus;
 import Rooms.Enums.RoomTybe;
 import Rooms.entite.Room;
-import Rooms.service.RoomService;
+import Rooms.Service.RoomService;
 import Validations.ValidationUtils;
 
 import java.math.BigDecimal;

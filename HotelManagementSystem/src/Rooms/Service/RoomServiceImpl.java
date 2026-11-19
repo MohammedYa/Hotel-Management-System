@@ -1,20 +1,21 @@
 
-package Rooms.service;
+package Rooms.Service;
 
-import Booking.services.BookingService;
+import Booking.Services.BookingService;
 import Rooms.Enums.RoomStatus;
 import Rooms.entite.Room;
-import Rooms.pakages.RoomRepository;
+import Rooms.Pakages.RoomRepository;
 import Validations.ValidationUtils;
 
 import java.util.List;
 
 /**
  * Provides business logic for managing hotel rooms.
+ *
  * Handles room creation, searching, deletion, updating,
  * and changing room status.
  *
- * Also coordinates with BookingService when a room is deleted.
+ * Coordinates with BookingService when a room is deleted.
  */
 public class RoomServiceImpl implements RoomService {
 
@@ -26,28 +27,31 @@ public class RoomServiceImpl implements RoomService {
      *
      * @param roomRepository repository used to manage room data
      * @param bookingService service used to manage related bookings
+     * @throws IllegalArgumentException if any dependency is null
      */
-    public RoomServiceImpl(RoomRepository roomRepository,
-                           BookingService bookingService) {
+    public RoomServiceImpl(
+            RoomRepository roomRepository,
+            BookingService bookingService) {
+
+        ValidationUtils.requireNotNull(roomRepository, "Room Repository");
+        ValidationUtils.requireNotNull(bookingService, "Booking Service");
+
         this.roomRepository = roomRepository;
         this.bookingService = bookingService;
     }
 
     /**
-     * Adds a new room after validating the room object
-     * and checking that its room number does not already exist.
+     * Adds a new room after validating the room object.
      *
      * @param room room to be added
-     * @return true if the room was added successfully, otherwise false
-     * @throws IllegalArgumentException if room is null or already exists
+     * @return true if the room was added successfully,
+     *         false if a room with the same number already exists
+     * @throws IllegalArgumentException if room is null
      */
     @Override
     public boolean addRoom(Room room) {
-        ValidationUtils.requireNotNull(room, "Room");
 
-        if (roomRepository.searchRoom(room.getRoomNumber()) != null) {
-            throw new IllegalArgumentException("Room already exists");
-        }
+        ValidationUtils.requireNotNull(room, "Room");
 
         return roomRepository.addRoom(room);
     }
@@ -71,7 +75,9 @@ public class RoomServiceImpl implements RoomService {
      */
     @Override
     public Room searchRoom(int roomNumber) {
+
         ValidationUtils.requirePositive(roomNumber, "Room Number");
+
         return roomRepository.searchRoom(roomNumber);
     }
 
@@ -80,11 +86,13 @@ public class RoomServiceImpl implements RoomService {
      * Related bookings are cancelled before deleting the room.
      *
      * @param roomNumber number of the room to be deleted
-     * @return true if the room was deleted successfully, otherwise false
+     * @return true if the room was deleted successfully,
+     *         false if the room does not exist
      * @throws IllegalArgumentException if roomNumber is not positive
      */
     @Override
     public boolean deleteRoom(int roomNumber) {
+
         ValidationUtils.requirePositive(roomNumber, "Room Number");
 
         if (roomRepository.searchRoom(roomNumber) == null) {
@@ -100,11 +108,13 @@ public class RoomServiceImpl implements RoomService {
      * Updates the information of an existing room.
      *
      * @param room room containing the updated information
-     * @return true if the room was updated successfully, otherwise false
+     * @return true if the room was updated successfully,
+     *         false if the room does not exist
      * @throws IllegalArgumentException if room is null
      */
     @Override
     public boolean updateRoom(Room room) {
+
         ValidationUtils.requireNotNull(room, "Room");
 
         return roomRepository.updateRoom(room);
@@ -115,12 +125,14 @@ public class RoomServiceImpl implements RoomService {
      *
      * @param roomNumber number of the room
      * @param roomStatus new status to be assigned to the room
-     * @return true if the status was changed successfully, otherwise false
+     * @return true if the status was changed successfully,
+     *         false if the room does not exist
      * @throws IllegalArgumentException if roomNumber is not positive
      *         or roomStatus is null
      */
     @Override
     public boolean changeRoomStatus(int roomNumber, RoomStatus roomStatus) {
+
         ValidationUtils.requirePositive(roomNumber, "Room Number");
         ValidationUtils.requireNotNull(roomStatus, "Room Status");
 

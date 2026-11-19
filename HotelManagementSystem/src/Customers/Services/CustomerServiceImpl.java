@@ -1,7 +1,7 @@
 
 package Customers.Services;
 
-import Booking.services.BookingService;
+import Booking.Services.BookingService;
 import Customers.Entite.Customer;
 import Customers.Packages.CustomerRepository;
 import Validations.ValidationUtils;
